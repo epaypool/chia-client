@@ -7,7 +7,7 @@
     "build": "tsc",
     "watch": "jest --watch",
     "test": "jest --runInBand test/",
-    "prepare": "rm -rf dist && npm run build"
+    "prepare": "rm -rf dist && npm run build && husky install"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
     "@types/node": "^15.12.1",
     "@types/ws": "^7.4.4",
     "@types/yaml": "^1.9.7",
+    "husky": "^6.0.0",
     "jest": "^27.0.4",
     "nock": "^13.1.0",
     "ts-jest": "^27.0.2",
