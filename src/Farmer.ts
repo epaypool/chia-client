@@ -1,4 +1,4 @@
-import { 
+import {
   RewardTargetResponse,
   SignagePointResponse,
   SignagePointsResponse
@@ -7,24 +7,32 @@ import { CertPath } from "./types/CertPath";
 import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 import { ChiaOptions, RpcClient } from "./RpcClient";
 import { RpcResponse } from "./types/RpcResponse";
-
-const chiaConfig = getChiaConfig();
-const defaultProtocol = "https";
-const defaultHostname = chiaConfig?.self_hostname || "localhost";
-const defaultPort = chiaConfig?.farmer.rpc_port || 8559;
-const defaultCaCertPath = chiaConfig?.private_ssl_ca.crt;
-const defaultCertPath = chiaConfig?.daemon_ssl.private_crt;
-const defaultCertKey = chiaConfig?.daemon_ssl.private_key;
+import { FarmingInfo } from "./ws/FarmingInfo";
 
 class Farmer extends RpcClient {
-  public constructor(options?: Partial<ChiaOptions> & CertPath) {
+  public constructor(options?: Partial<ChiaOptions> & CertPath, rootPath?: string) {
+    const chiaConfig = getChiaConfig(rootPath);
+    const defaultHostname = chiaConfig.self_hostname || "localhost";
+    const defaultPort = chiaConfig.farmer.rpc_port || 8559;
+    const defaultCaCertPath = chiaConfig.private_ssl_ca.crt;
+    const defaultCertPath = chiaConfig.daemon_ssl.private_crt;
+    const defaultCertKey = chiaConfig.daemon_ssl.private_key;
+
     super({
-      protocol: options?.protocol || defaultProtocol,
       hostname: options?.hostname || defaultHostname,
       port: options?.port || defaultPort,
-      caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath),
-      certPath: options?.certPath || getChiaFilePath(defaultCertPath),
-      keyPath: options?.keyPath || getChiaFilePath(defaultCertKey),
+      caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
+      certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
+      keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
+    });
+  }
+
+  public onNewFarmingInfo(cb: (data: FarmingInfo) => void) {
+    this.ws.onMessage( (message: any) => {
+      if (message.command !== 'new_farming_info') {
+        return;
+      }
+      cb(message.data.farming_info);
     });
   }
 
@@ -39,6 +47,10 @@ class Farmer extends RpcClient {
   public async getSignagePoints(): Promise<SignagePointsResponse> {
     return this.request<SignagePointsResponse>("get_signage_points", {});
   }
+
+  // public async getPoolState(): Promise<any> {
+  //   return this.request<any>("get_pool_state", {});
+  // }
 
   public async getRewardTarget(
     searchForPrivateKey: boolean

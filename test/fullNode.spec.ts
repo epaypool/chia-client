@@ -1,16 +1,15 @@
 import * as nock from "nock";
 import { FullNode } from "../index";
 
-jest.mock("fs");
-jest.mock("yaml");
+// jest.mock("fs");
+// jest.mock("yaml");
 
 describe("Full Node", () => {
   describe("RPC calls", () => {
     const fullNode = new FullNode({
-      caCertPath: "/dev/null/cert.crt",
-      certPath: "/dev/null/cert.crt",
-      keyPath: "/dev/null/cert.key",
-    });
+      hostname: 'localhost',
+      port: 8555
+    }, './test/');
 
     it("calls get_blockchain_state", async () => {
       nock("https://localhost:8555")
@@ -19,6 +18,15 @@ describe("Full Node", () => {
         .reply(200, "success");
 
       expect(await fullNode.getBlockchainState()).toEqual("success");
+    });
+
+    it("calls get_network_info", async () => {
+      nock("https://localhost:8555")
+          .defaultReplyHeaders({ "access-control-allow-origin": "*" })
+          .post("/get_network_info")
+          .reply(200, "success");
+
+      expect(await fullNode.getNetworkInfo()).toEqual("success");
     });
 
     it("calls get_block with header_hash in body", async () => {

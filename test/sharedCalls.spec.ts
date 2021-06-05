@@ -1,16 +1,15 @@
 import * as nock from "nock";
 import {SharedCalls} from "../index";
 
-jest.mock("fs");
-jest.mock("yaml");
+// jest.mock("fs");
+// jest.mock("yaml");
 
 
 describe("Shared Calls", () => {
     describe("RPC Calls", () => {
         const sharedCallInterface = new SharedCalls({
-            caCertPath: "/dev/null/cert.crt",
-            certPath: "/dev/null/cert.crt",
-            keyPath: "/dev/null/cert.key",
+            hostname: 'localhost',
+            port: 8555
         })
 
         it("calls get_connections", async () => {

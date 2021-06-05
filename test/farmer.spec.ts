@@ -1,16 +1,15 @@
 import * as nock from "nock";
 import { Farmer } from "../index";
 
-jest.mock("fs");
-jest.mock("yaml");
+// jest.mock("fs");
+// jest.mock("yaml");
 
 describe("Farmer", () => {
   describe("RPC calls", () => {
     const farmer = new Farmer({
-      caCertPath: "/dev/null/cert.crt",
-      certPath: "/dev/null/cert.crt",
-      keyPath: "/dev/null/cert.key",
-    });
+      hostname: 'localhost',
+      port: 8559
+    }, './test/');
 
     it("calls get_signage_point", async () => {
       nock("https://localhost:8559")

@@ -1,16 +1,15 @@
 import * as nock from "nock";
 import { Wallet } from "../index";
 
-jest.mock("fs");
-jest.mock("yaml");
+// jest.mock("fs");
+// jest.mock("yaml");
 
 describe("Wallet", () => {
   describe("RPC calls", () => {
     const wallet = new Wallet({
-      caCertPath: "/dev/null/cert.crt",
-      certPath: "/dev/null/cert.crt",
-      keyPath: "/dev/null/cert.key",
-    });
+      hostname: 'localhost',
+      port: 9256
+    }, './test/');
 
     it("calls log_in with type=start", async () => {
       nock("https://localhost:9256")
@@ -182,10 +181,10 @@ describe("Wallet", () => {
     it("calls get_transactions with limit=1000", async () => {
       nock("https://localhost:9256")
         .defaultReplyHeaders({ "access-control-allow-origin": "*" })
-        .post("/get_transactions", { wallet_id: "fakeWalletId", end: 1000 })
+        .post("/get_transactions", { wallet_id: "fakeWalletId", start: 0, end: 1000 })
         .reply(200, { transactions: "success" });
 
-      expect(await wallet.getTransactions("fakeWalletId", 1000)).toEqual("success");
+      expect(await wallet.getTransactions("fakeWalletId", 0, 1000)).toEqual("success");
     });
 
     it("calls get_next_address", async () => {

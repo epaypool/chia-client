@@ -1,11 +1,9 @@
 import { readFileSync } from "fs";
 import { Agent } from "https";
 import axios from "axios";
-
-type Protocol = "https" | "http";
+import {Connection} from "./ws/Connection";
 
 interface ChiaOptions {
-  protocol: Protocol;
   hostname: string;
   port: number;
   caCertPath: string | boolean;
@@ -14,25 +12,27 @@ interface ChiaOptions {
 }
 
 class RpcClient {
-  private readonly protocol: Protocol;
   private readonly hostname: string;
   private readonly port: number;
   private readonly agent: Agent;
+  protected readonly ws: Connection;
 
   public constructor(options: ChiaOptions) {
-    this.protocol = options.protocol;
     this.hostname = options.hostname;
     this.port = options.port;
+    const cert = readFileSync(options.certPath);
+    const key = readFileSync(options.keyPath);
     this.agent = new Agent({
       ...(typeof options.caCertPath !== 'boolean' ? { ca: readFileSync(options.caCertPath) } : {}),
-      cert: readFileSync(options.certPath),
-      key: readFileSync(options.keyPath),
+      cert,
+      key,
       rejectUnauthorized: options.hostname !== "localhost",
     });
+    this.ws = new Connection(options.hostname, { cert, key })
   }
 
   private baseUri(): string {
-    return `${this.protocol}://${this.hostname}:${this.port}`;
+    return `https://${this.hostname}:${this.port}`;
   }
 
   protected async request<T>(
@@ -41,6 +41,7 @@ class RpcClient {
   ): Promise<T> {
     const { data } = await axios.post<T>(`${this.baseUri()}/${route}`, body, {
       httpsAgent: this.agent,
+
     });
 
     return data;

@@ -7,11 +7,13 @@ export interface SignagePointResponse extends RpcResponse {
     proofs: ProofOfSpace[];
 }
 
+export interface SignagePoints {
+    signage_point: SignagePoint;
+    proofs: ProofOfSpace[];
+}
+
 export interface SignagePointsResponse extends RpcResponse {
-    signage_points: {
-        signage_point: SignagePoint;
-        proofs: ProofOfSpace[];
-    }[];
+    signage_points: SignagePoints[];
 }
 
 export interface RewardTargetResponse extends RpcResponse {

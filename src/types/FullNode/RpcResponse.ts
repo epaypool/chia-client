@@ -6,8 +6,18 @@ import { BlockRecord } from './BlockRecord';
 import { RpcResponse } from '../RpcResponse';
 import {Connection} from "../Shared/Connection";
 
+
 export interface BlockchainStateResponse extends RpcResponse {
     blockchain_state: BlockchainState;
+}
+
+export interface Constants {
+    MIN_PLOT_SIZE: number
+}
+
+export interface NetworkInfoResponse extends RpcResponse {
+    network_name: string
+    network_prefix: string
 }
 
 export interface UnfinishedBlockHeadersResponse extends RpcResponse {
