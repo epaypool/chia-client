@@ -1,16 +1,18 @@
 import * as WebSocket from 'ws';
 import * as http from "http";
 import * as events from 'events';
-
+import Debug from 'debug';
 import { Message } from './Message';
+import { Daemon } from './Daemon';
 // const { Daemon } = require('./api-client');
+const debug = Debug('epaypool:Connection.ts');
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 class Connection {
     private readonly address: string;
     private ws!: WebSocket;
-    private connected: boolean;
+    public connected: boolean;
     private events: events.EventEmitter;
     private callbackMap: Map<string, any>;
     private services: Map<any, any>;
@@ -31,13 +33,14 @@ class Connection {
         this.timeoutInSeconds = timeoutInSeconds;
     }
 
-    //TODO: change to proper type
-    addService(serviceName: any) {
+    addService(serviceName: string) {
         this.services.set(serviceName, serviceName);
     }
 
     async connect() {
-        this.ws = new WebSocket(`wss://${this.address}`, this.options);
+        const link = `wss://${this.address}`;
+        debug('Connecting to %s', link);
+        this.ws = new WebSocket(link, this.options);
         this.connected = false;
 
         const isOpen = new Promise((resolve, reject) => {
@@ -82,10 +85,11 @@ class Connection {
         });
 
         await isOpen;
-        // await this.registerServices();
+        await this.registerServices();
     }
 
     onOpen() {
+        debug('connected ', `wss://${this.address}`);
         this.connected = true;
     }
 
@@ -111,8 +115,7 @@ class Connection {
         this.events.on('error', cb);
     }
 
-    //TODO define message
-    async send(message: any) {
+    async send(message: Message) : Promise<any> {
         if (!this.connected) {
             throw new Error('Can not send while not connected');
         }
@@ -130,17 +133,17 @@ class Connection {
         });
     }
 
-    // async registerServices() {
-    //     if (!this.connected) {
-    //         throw new Error('Can not register services while not connected');
-    //     }
-    //     const unregisteredServices = Array.from(this.services.values()).filter(serviceName => !this.registeredServices.has(serviceName));
-    //     for (let service of unregisteredServices) {
-    //         const daemon = new Daemon({ connection: this, origin: service });
-    //         await daemon.registerService(service);
-    //         this.registeredServices.set(service, service);
-    //     }
-    // }
+    async registerServices() {
+        if (!this.connected) {
+            throw new Error('Can not register services while not connected');
+        }
+        const unregisteredServices = Array.from(this.services.values()).filter(serviceName => !this.registeredServices.has(serviceName));
+        for (let service of unregisteredServices) {
+            const daemon = new Daemon(service, this);
+            await daemon.registerService(service);
+            this.registeredServices.set(service, service);
+        }
+    }
 
     async close() {
         if (!this.connected) {

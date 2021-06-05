@@ -15,6 +15,7 @@ import { CertPath } from "./types/CertPath";
 import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 // @ts-ignore
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
+import {SERVICE} from "./ws/Constants";
 
 class FullNode extends RpcClient {
 
@@ -26,12 +27,13 @@ class FullNode extends RpcClient {
     const defaultCertPath = chiaConfig?.daemon_ssl.private_crt;
     const defaultCertKey = chiaConfig?.daemon_ssl.private_key;
     super({
+      conn: options?.conn,
       hostname: options?.hostname || defaultHostname,
       port: options?.port || defaultPort,
       caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
       certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
       keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
-    });
+    }, SERVICE.fullNode);
   }
 
   public async getBlockchainState(): Promise<BlockchainStateResponse> {

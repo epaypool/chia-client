@@ -7,16 +7,16 @@ export interface MessageInfo {
   command: string;
   origin: string;
   destination: string;
-  data: any;
-  ack: boolean;
-  requestId: string;
+  data?: any;
+  ack?: boolean;
+  requestId?: string;
 }
 
 class Message implements MessageInfo {
   readonly command: string;
   readonly origin: string;
   readonly destination: string;
-  readonly data: any;
+  readonly data?: any;
   readonly ack: boolean;
   readonly requestId: string;
 

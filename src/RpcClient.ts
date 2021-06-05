@@ -2,8 +2,10 @@ import { readFileSync } from "fs";
 import { Agent } from "https";
 import axios from "axios";
 import {Connection} from "./ws/Connection";
+import {Base} from "./ws/Base";
 
 interface ChiaOptions {
+  conn?: Connection;
   hostname: string;
   port: number;
   caCertPath: string | boolean;
@@ -11,13 +13,13 @@ interface ChiaOptions {
   keyPath: string;
 }
 
-class RpcClient {
+class RpcClient extends Base {
   private readonly hostname: string;
   private readonly port: number;
   private readonly agent: Agent;
-  protected readonly ws: Connection;
 
-  public constructor(options: ChiaOptions) {
+  public constructor(options: ChiaOptions, origin: string) {
+    super(origin, options.conn);
     this.hostname = options.hostname;
     this.port = options.port;
     const cert = readFileSync(options.certPath);
@@ -26,9 +28,9 @@ class RpcClient {
       ...(typeof options.caCertPath !== 'boolean' ? { ca: readFileSync(options.caCertPath) } : {}),
       cert,
       key,
-      rejectUnauthorized: options.hostname !== "localhost",
+      // rejectUnauthorized: options.hostname !== "localhost",
+      rejectUnauthorized: false,
     });
-    this.ws = new Connection(options.hostname, { cert, key })
   }
 
   private baseUri(): string {

@@ -8,6 +8,7 @@ import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 import { ChiaOptions, RpcClient } from "./RpcClient";
 import { RpcResponse } from "./types/RpcResponse";
 import { FarmingInfo } from "./ws/FarmingInfo";
+import {SERVICE} from "./ws/Constants";
 
 class Farmer extends RpcClient {
   public constructor(options?: Partial<ChiaOptions> & CertPath, rootPath?: string) {
@@ -19,16 +20,17 @@ class Farmer extends RpcClient {
     const defaultCertKey = chiaConfig.daemon_ssl.private_key;
 
     super({
+      conn: options?.conn,
       hostname: options?.hostname || defaultHostname,
       port: options?.port || defaultPort,
       caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
       certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
       keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
-    });
+    }, SERVICE.farmer);
   }
 
   public onNewFarmingInfo(cb: (data: FarmingInfo) => void) {
-    this.ws.onMessage( (message: any) => {
+    this.connection?.onMessage( (message: any) => {
       if (message.command !== 'new_farming_info') {
         return;
       }

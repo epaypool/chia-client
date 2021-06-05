@@ -20,6 +20,7 @@ import { WalletBalance } from "./types/Wallet/WalletBalance";
 import { WalletInfo } from "./types/Wallet/WalletInfo";
 // @ts-ignore
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
+import {SERVICE} from "./ws/Constants";
 
 const host = "https://backup.chia.net";
 
@@ -33,12 +34,13 @@ class Wallet extends RpcClient {
     const defaultCertPath = chiaConfig?.daemon_ssl.private_crt;
     const defaultCertKey = chiaConfig?.daemon_ssl.private_key;
     super({
+      conn: options?.conn,
       hostname: options?.hostname || defaultHostname,
       port: options?.port || defaultPort,
       caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
       certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
       keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
-    });
+    }, SERVICE.walletUi);
   }
 
   public async logIn(fingerprint: number): Promise<LoginResponse> {

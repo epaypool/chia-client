@@ -5,6 +5,7 @@
   "main": "dist/",
   "scripts": {
     "build": "tsc",
+    "dev": "tsc -w",
     "watch": "jest --watch",
     "test": "jest --runInBand test/",
     "prepare": "rm -rf dist && npm run build && husky install"
@@ -20,6 +21,7 @@
   "author": "Freddie Coleman",
   "license": "MIT",
   "devDependencies": {
+    "@types/debug": "^4.1.5",
     "@types/jest": "^26.0.23",
     "@types/json-bigint": "^1.0.0",
     "@types/nock": "^11.1.0",
@@ -37,6 +39,7 @@
     "axios": "^0.21.1",
     "chia-utils": "^1.0.3",
     "crypto": "^1.0.1",
+    "debug": "^4.3.1",
     "json-bigint": "^1.0.0",
     "ws": "^7.4.5",
     "yaml": "2.0.0-5"

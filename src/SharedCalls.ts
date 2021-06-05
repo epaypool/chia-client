@@ -14,12 +14,13 @@ class SharedCalls extends RpcClient {
         const defaultCertPath = chiaConfig?.daemon_ssl.private_crt;
         const defaultCertKey = chiaConfig?.daemon_ssl.private_key;
         super({
+            conn: options?.conn,
             hostname: options?.hostname || defaultHostname,
             port: options?.port || defaultPort,
             caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
             certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
             keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
-        });
+        }, 'shared_calls');
     }
 
     public async getConnections(): Promise<ConnectionResponse> {
