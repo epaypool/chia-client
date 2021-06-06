@@ -1,5 +1,5 @@
 import * as nock from "nock";
-import { FullNode } from "../src/";
+import { FullNode } from "../";
 
 // jest.mock("fs");
 // jest.mock("yaml");

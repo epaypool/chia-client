@@ -1,5 +1,5 @@
 import * as nock from "nock";
-import { Harvester } from "../src/";
+import { Harvester } from "../";
 
 // jest.mock("fs");
 // jest.mock("yaml");

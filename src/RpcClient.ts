@@ -6,6 +6,7 @@ import {Base} from "./ws/Base";
 
 interface ChiaOptions {
   conn?: Connection;
+  origin?: string;
   hostname: string;
   port: number;
   caCertPath: string | boolean;

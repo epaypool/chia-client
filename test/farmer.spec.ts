@@ -1,5 +1,5 @@
 import * as nock from "nock";
-import { Farmer } from "../src";
+import { Farmer } from "../";
 
 // jest.mock("fs");
 // jest.mock("yaml");

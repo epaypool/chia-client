@@ -8,7 +8,8 @@ import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 import { ChiaOptions, RpcClient } from "./RpcClient";
 import { RpcResponse } from "./types/RpcResponse";
 import { FarmingInfo } from "./ws/FarmingInfo";
-import {SERVICE} from "./ws/Constants";
+import {Message, SERVICE} from "./ws";
+import {randomBytes} from "crypto";
 
 class Farmer extends RpcClient {
   public constructor(options?: Partial<ChiaOptions> & CertPath, rootPath?: string) {
@@ -26,7 +27,11 @@ class Farmer extends RpcClient {
       caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
       certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
       keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
-    }, SERVICE.farmer);
+    }, options?.origin || randomBytes(32).toString('hex'));
+  }
+
+  get destination() {
+    return SERVICE.farmer;
   }
 
   public onNewFarmingInfo(cb: (data: FarmingInfo) => void) {
@@ -41,9 +46,19 @@ class Farmer extends RpcClient {
   public async getSignagePoint(
     signagePointHash: string
   ): Promise<SignagePointResponse> {
-    return this.request<SignagePointResponse>("get_signage_point", {
-      sp_hash: signagePointHash,
-    });
+    if (this.connection) {
+      const res = await this.connection.send(new Message({
+        command: 'get_signage_point',
+        origin: this.origin,
+        destination: this.destination,
+        data: { sp_hash: signagePointHash }
+      }));
+      return res.data;
+    } else {
+      return this.request<SignagePointResponse>("get_signage_point", {
+        sp_hash: signagePointHash,
+      });
+    }
   }
 
   public async getSignagePoints(): Promise<SignagePointsResponse> {
