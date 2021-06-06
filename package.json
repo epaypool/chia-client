@@ -1,8 +1,9 @@
 {
   "name": "@epaypool/chia-client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TypeScript client for Chia node peer RPC interface and WS",
   "main": "dist/",
+  "types": "dist/",
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",

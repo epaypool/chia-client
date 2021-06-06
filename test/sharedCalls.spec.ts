@@ -1,5 +1,5 @@
 import * as nock from "nock";
-import {SharedCalls} from "../index";
+import {SharedCalls} from "../src";
 
 // jest.mock("fs");
 // jest.mock("yaml");

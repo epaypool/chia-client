@@ -1,5 +1,5 @@
 import * as nock from "nock";
-import { Wallet } from "../index";
+import { Wallet } from "../src";
 
 // jest.mock("fs");
 // jest.mock("yaml");
