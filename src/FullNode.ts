@@ -59,8 +59,6 @@ class FullNode extends RpcClient {
         origin: this.origin,
         destination: this.destination
       });
-      console.log('message=', messsage);
-      console.log('connection=', this.connection);
       const res = await this.connection.send(messsage);
       return res.data;
     } else {
