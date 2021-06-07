@@ -15,7 +15,10 @@ import { CertPath } from "./types/CertPath";
 import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 // @ts-ignore
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
-import {SERVICE} from "./ws/Constants";
+import {SERVICE} from "./ws";
+import { Message} from "./ws";
+import {BlockchainState} from "./types/FullNode/BlockchainState";
+import {randomBytes} from "crypto";
 
 class FullNode extends RpcClient {
 
@@ -33,11 +36,36 @@ class FullNode extends RpcClient {
       caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
       certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
       keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
-    }, SERVICE.fullNode);
+    }, options?.origin || randomBytes(32).toString('hex'));
+  }
+
+  get destination() {
+    return SERVICE.fullNode;
+  }
+
+  onNewBlockchainState(cb: (data: BlockchainState) => void) {
+    this.connection?.onMessage(message => {
+      if (message.command !== 'get_blockchain_state') {
+        return;
+      }
+      cb(message.data);
+    });
   }
 
   public async getBlockchainState(): Promise<BlockchainStateResponse> {
-    return this.request<BlockchainStateResponse>("get_blockchain_state", {});
+    if (this.connection) {
+      const messsage = new Message({
+        command: 'get_blockchain_state',
+        origin: this.origin,
+        destination: this.destination
+      });
+      console.log('message=', messsage);
+      console.log('connection=', this.connection);
+      const res = await this.connection.send(messsage);
+      return res.data;
+    } else {
+      return this.request<BlockchainStateResponse>("get_blockchain_state", {});
+    }
   }
 
   public async getNetworkInfo(): Promise<NetworkInfoResponse> {

@@ -6,7 +6,8 @@ import { CertPath } from "./types/CertPath";
 import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 import { ChiaOptions, RpcClient } from "./RpcClient";
 import { RpcResponse } from "./types/RpcResponse";
-import {SERVICE} from "./ws/Constants";
+import {SERVICE} from "./ws";
+import {randomBytes} from "crypto";
 
 class Harvester extends RpcClient {
   public constructor(options?: Partial<ChiaOptions> & CertPath, rootPath?: string) {
@@ -23,7 +24,11 @@ class Harvester extends RpcClient {
       caCertPath: options?.caCertPath || getChiaFilePath(defaultCaCertPath, rootPath),
       certPath: options?.certPath || getChiaFilePath(defaultCertPath, rootPath),
       keyPath: options?.keyPath || getChiaFilePath(defaultCertKey, rootPath),
-    }, SERVICE.harvester);
+    }, options?.origin || randomBytes(32).toString('hex'));
+  }
+
+  get destination() {
+    return SERVICE.harvester;
   }
 
   public async getPlots(): Promise<PlotsResponse> {

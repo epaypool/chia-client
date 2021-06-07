@@ -7,7 +7,7 @@ import { CertPath } from "./types/CertPath";
 import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 import { ChiaOptions, RpcClient } from "./RpcClient";
 import { RpcResponse } from "./types/RpcResponse";
-import { FarmingInfo } from "./ws/FarmingInfo";
+import { FarmingInfo } from "./ws";
 import {Message, SERVICE} from "./ws";
 import {randomBytes} from "crypto";
 
@@ -35,7 +35,7 @@ class Farmer extends RpcClient {
   }
 
   public onNewFarmingInfo(cb: (data: FarmingInfo) => void) {
-    this.connection?.onMessage( (message: any) => {
+    this.connection?.onMessage( (message: Message) => {
       if (message.command !== 'new_farming_info') {
         return;
       }
@@ -62,7 +62,16 @@ class Farmer extends RpcClient {
   }
 
   public async getSignagePoints(): Promise<SignagePointsResponse> {
-    return this.request<SignagePointsResponse>("get_signage_points", {});
+    if (this.connection) {
+      const res = await this.connection.send(new Message({
+        command: 'get_signage_points',
+        origin: this.origin,
+        destination: this.destination,
+      }));
+      return res.data;
+    } else {
+      return this.request<SignagePointsResponse>("get_signage_points", {});
+    }
   }
 
   // public async getPoolState(): Promise<any> {
