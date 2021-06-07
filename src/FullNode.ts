@@ -17,7 +17,6 @@ import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 import { address_to_puzzle_hash, puzzle_hash_to_address, get_coin_info } from "chia-utils";
 import {SERVICE} from "./ws";
 import { Message} from "./ws";
-import {BlockchainState} from "./types/FullNode/BlockchainState";
 import {randomBytes} from "crypto";
 
 class FullNode extends RpcClient {
@@ -43,7 +42,7 @@ class FullNode extends RpcClient {
     return SERVICE.fullNode;
   }
 
-  onNewBlockchainState(cb: (data: BlockchainState) => void) {
+  onNewBlockchainState(cb: (data: BlockchainStateResponse) => void) {
     this.connection?.onMessage(message => {
       if (message.command !== 'get_blockchain_state') {
         return;
