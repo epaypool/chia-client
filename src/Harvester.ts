@@ -6,7 +6,7 @@ import { CertPath } from "./types/CertPath";
 import { getChiaConfig, getChiaFilePath } from "./ChiaNodeUtils";
 import { ChiaOptions, RpcClient } from "./RpcClient";
 import { RpcResponse } from "./types/RpcResponse";
-import {SERVICE} from "./ws";
+import {Message, SERVICE} from "./ws";
 import {randomBytes} from "crypto";
 
 class Harvester extends RpcClient {
@@ -31,8 +31,18 @@ class Harvester extends RpcClient {
     return SERVICE.harvester;
   }
 
+
   public async getPlots(): Promise<PlotsResponse> {
-    return this.request<PlotsResponse>("get_plots", {});
+    if (this.connection) {
+      const res = await this.connection.send(new Message({
+        command: 'get_plots',
+        origin: this.origin,
+        destination: this.destination
+      }));
+      return res.data;
+    } else {
+      return this.request<PlotsResponse>("get_plots", {});
+    }
   }
 
   public async refreshPlots(): Promise<RpcResponse> {
