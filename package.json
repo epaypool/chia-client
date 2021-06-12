@@ -13,13 +13,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/freddiecoleman/chia-client"
+    "url": "https://github.com/epaypool/chia-client"
   },
   "keywords": [
     "chia",
     "cryptocurrency"
   ],
-  "author": "Freddie Coleman",
+  "author": "Epaypool Admin",
   "license": "MIT",
   "devDependencies": {
     "@types/debug": "^4.1.5",

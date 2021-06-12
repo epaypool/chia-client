@@ -10,7 +10,7 @@ describe("Shared Calls", () => {
         const sharedCallInterface = new SharedCalls({
             hostname: 'localhost',
             port: 8555
-        })
+        }, './test/')
 
         it("calls get_connections", async () => {
             nock("https://localhost:8555")
