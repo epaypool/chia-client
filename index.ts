@@ -5,6 +5,8 @@ import { SharedCalls } from './src/SharedCalls';
 
 export * from './src/WalletUI';
 export * from './src/Harvester';
+export * from './src/types/Harvester/Plot';
+export * from './src/types/Harvester/RpcResponse';
 export * from './src/types/Farmer/RpcResponse';
 export * from './src/types/Farmer/SignagePoint';
 export * from './src/types/FullNode/RpcResponse';
