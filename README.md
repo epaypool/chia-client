@@ -2,7 +2,7 @@
 
 TypeScript client for communicating with [Chia](https://www.chia.net/) RPC interfaces. All API calls return promises.
 
-### Full Node
+## Full Node
 
 ```
 import { FullNode } from 'chia-client';
@@ -16,7 +16,7 @@ const fullNode = new FullNode({
 const blockchain = await fullNode.getBlockchainState();
 ```
 
-### Wallet
+## Wallet
 
 ```
 import { Wallet } from 'chia-client';
@@ -30,6 +30,6 @@ const wallet = new Wallet({
 const mnemonic = await wallet.generateMnemonic();
 ```
 
-### Credits
+## Credits
 
 This client is provided by [Chia Blockchain Explorer](https://www.chiaexplorer.com).

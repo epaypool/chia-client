@@ -1,8 +1,7 @@
-import { readFileSync } from "fs";
-import { Agent } from "https";
-import axios from "axios";
-import {Connection} from "./ws/Connection";
-import {Base} from "./ws/Base";
+import axios from 'axios';
+import { readFileSync } from 'fs';
+import { Agent } from 'https';
+import { Base, Connection } from './ws';
 
 interface ChiaOptions {
   conn?: Connection;
@@ -44,7 +43,6 @@ class RpcClient extends Base {
   ): Promise<T> {
     const { data } = await axios.post<T>(`${this.baseUri()}/${route}`, body, {
       httpsAgent: this.agent,
-
     });
 
     return data;

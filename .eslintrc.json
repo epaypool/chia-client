@@ -1,0 +1,6 @@
+{
+  "extends": ["@epaypool/eslint-config-ts"],
+  "rules": {
+    "jest/no-commented-out-tests": 0
+  }
+}

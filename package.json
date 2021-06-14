@@ -1,6 +1,6 @@
 {
   "name": "@epaypool/chia-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publishConfig": {
     "access": "public"
   },
@@ -10,9 +10,11 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
+    "lint": "nopenv pre-commit run --all-files",
+    "lint-staged": "lint-staged",
+    "prepare": "npip install && husky install && rm -rf dist && npm run build && husky install",
     "watch": "jest --watch",
-    "test": "jest --runInBand test/",
-    "prepare": "rm -rf dist && npm run build && husky install"
+    "test": "jest --runInBand test/"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
   "author": "Epaypool Admin <info@epaypool.com>",
   "license": "MIT",
   "devDependencies": {
+    "@epaypool/eslint-config-ts": "^1.0.3",
     "@types/debug": "^4.1.5",
     "@types/jest": "^26.0.23",
     "@types/json-bigint": "^1.0.0",
@@ -34,7 +37,12 @@
     "@types/yaml": "^1.9.7",
     "husky": "^6.0.0",
     "jest": "^27.0.4",
+    "lint-staged": "^11.0.0",
     "nock": "^13.1.0",
+    "nopy": "^0.2.7",
+    "prettier": "^2.3.1",
+    "prettier-plugin-organize-imports": "^2.1.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^27.0.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.0.0"
@@ -62,6 +70,20 @@
         "tsConfig": "tsconfig.json",
         "isolatedModules": true
       }
+    }
+  },
+  "lint-staged": {
+    "*": [
+      "nopenv pre-commit run --files"
+    ]
+  },
+  "python": {
+    "execPath": [
+      "python3",
+      "python"
+    ],
+    "dependencies": {
+      "pre-commit": ">=2.0"
     }
   }
 }

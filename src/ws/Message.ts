@@ -1,7 +1,6 @@
-import * as WebSocket from "ws";
-
 import { randomBytes } from 'crypto';
 import * as JsonBigInt from 'json-bigint';
+import * as WebSocket from 'ws';
 
 export interface MessageInfo {
   command: string;
@@ -36,7 +35,7 @@ class Message implements MessageInfo {
     this.requestId = requestId;
   }
 
-  toJSON() {
+  toJSON(): string {
     return JsonBigInt.stringify({
       command: this.command,
       data: this.data,
@@ -47,7 +46,7 @@ class Message implements MessageInfo {
     });
   }
 
-  static fromJSON(json: WebSocket.Data) {
+  static fromJSON(json: WebSocket.Data): Message {
     const request = JsonBigInt.parse(json as string);
 
     return new Message({

@@ -130,7 +130,7 @@ export interface Testnet4OrTestnet5OrTestnet7 {
   NETWORK_TYPE: number;
 }
 export interface PoolPublicKeys {
-  "99656028f4132ae39a7030288c628cfe41707ab66bb87afd7bdc623a295a76a42686da308f67950b8d8af70f723f5b41"?: null;
+  '99656028f4132ae39a7030288c628cfe41707ab66bb87afd7bdc623a295a76a42686da308f67950b8d8af70f723f5b41'?: null;
   a0388c5da5ff4c7ecc6582bcc75950d9179468537a083e6543cca79405b290b70ca9e19b66ce92be672a2bf887f35a55?: null;
   a117f031bd72c34cc87223c7edd7b6000d25a423c551093de7af04c59375ae13a11c4358e448d7e2b29c3a946fbc19bc?: null;
   a490f3c590c320cd9b2507597272492b6b84b3a4409ea80cadac148fe169eff30bb63c34c51b50118d9d36174c4f41ac?: null;
@@ -146,10 +146,10 @@ export interface Ssl {
 }
 export interface FullNode {
   database_path: string;
-  dns_servers?: (string)[] | null;
+  dns_servers?: string[] | null;
   enable_profiler: boolean;
   enable_upnp: boolean;
-  exempt_peer_networks?: (null)[] | null;
+  exempt_peer_networks?: null[] | null;
   farmer_peer: PeerHost;
   introducer_peer: PeerHost;
   logging: Logging;
@@ -184,7 +184,7 @@ export interface Harvester {
   logging: Logging;
   network_overrides: NetworkOverrides;
   num_threads: number;
-  plot_directories?: (string)[] | null;
+  plot_directories?: string[] | null;
   plot_loading_frequency_seconds: number;
   port: number;
   private_ssl_ca: SslCa;
@@ -227,8 +227,8 @@ export interface Timelord {
   vdf_server: PeerHost;
 }
 export interface VdfClients {
-  ip?: (string)[] | null;
-  ips_estimate?: (number)[] | null;
+  ip?: string[] | null;
+  ips_estimate?: number[] | null;
 }
 export interface TimelordLauncher {
   logging: Logging;

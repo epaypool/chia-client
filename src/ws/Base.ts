@@ -1,17 +1,18 @@
+import { ConnectionResponse } from '../types/FullNode/RpcResponse';
+import { Connection } from './Connection';
 import { Message } from './Message';
-import {Connection} from "./Connection";
 
 class Base {
   protected connection?: Connection;
   protected readonly origin: string;
 
-  constructor(origin: string, connection?: Connection ) {
+  constructor(origin: string, connection?: Connection) {
     this.connection = connection;
     this.origin = origin;
   }
 
-  onConnectionChange(cb: (data: any) => void) {
-    this.connection?.onMessage(message => {
+  onConnectionChange(cb: (data: any) => void): void {
+    this.connection?.onMessage((message) => {
       if (message.command !== 'get_connections' || message.origin !== this.destination) {
         return;
       }
@@ -19,8 +20,8 @@ class Base {
     });
   }
 
-  onRegisterServiceResult(cb: (data: any) => void) {
-    this.connection?.onMessage(message => {
+  onRegisterServiceResult(cb: (data: any) => void): void {
+    this.connection?.onMessage((message) => {
       if (message.command !== 'register_service' || message.destination !== this.destination) {
         return;
       }
@@ -28,7 +29,7 @@ class Base {
     });
   }
 
-  async init() {
+  async init(): Promise<void> {
     this.connection?.addService(this.origin);
     if (!this.connection?.connected) {
       await this.connection?.connect();
@@ -37,7 +38,7 @@ class Base {
     }
   }
 
-  async ping() {
+  async ping(): Promise<void> {
     const message = new Message({
       command: 'ping',
       origin: this.origin,
@@ -46,12 +47,14 @@ class Base {
     await this.connection?.send(message);
   }
 
-  async getConnections() {
-    const res = await this.connection?.send(new Message({
-      command: 'get_connections',
-      origin: this.origin,
-      destination: this.destination,
-    }));
+  async getConnections(): Promise<ConnectionResponse> {
+    const res = await this.connection?.send(
+      new Message({
+        command: 'get_connections',
+        origin: this.origin,
+        destination: this.destination,
+      })
+    );
 
     return res.data.connections;
   }

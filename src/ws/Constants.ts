@@ -23,8 +23,4 @@ const PLOTTING_STATE = {
   finished: 'FINISHED',
 };
 
-export {
-  SERVICE,
-  SERVICE_TYPE,
-  PLOTTING_STATE,
-};
+export { SERVICE, SERVICE_TYPE, PLOTTING_STATE };
