@@ -27,7 +27,7 @@
   "author": "Epaypool Admin <info@epaypool.com>",
   "license": "MIT",
   "devDependencies": {
-    "@epaypool/eslint-config-ts": "^1.0.3",
+    "@epaypool/eslint-config-ts": "^1.0.4",
     "@types/debug": "^4.1.5",
     "@types/jest": "^26.0.23",
     "@types/json-bigint": "^1.0.0",
