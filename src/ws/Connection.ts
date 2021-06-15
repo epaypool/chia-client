@@ -99,7 +99,7 @@ class Connection {
     if (!this.shouldRconnect) {
       return;
     }
-    await sleep(1000);
+    await sleep(this.timeoutInSeconds * 1000);
     try {
       await this.connect();
     } catch (err) {
