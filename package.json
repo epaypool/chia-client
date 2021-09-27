@@ -41,7 +41,7 @@
     "nock": "^13.1.0",
     "nopy": "^0.2.7",
     "prettier": "^2.3.1",
-    "prettier-plugin-organize-imports": "^2.1.0",
+    "prettier-plugin-organize-imports": "^2.3.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.2",
     "ts-node": "^10.0.0",
