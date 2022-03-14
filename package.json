@@ -33,7 +33,7 @@
     "@types/json-bigint": "^1.0.0",
     "@types/nock": "^11.1.0",
     "@types/node": "^15.12.1",
-    "@types/ws": "^7.4.4",
+    "@types/ws": "^8.5.3",
     "@types/yaml": "^1.9.7",
     "husky": "^6.0.0",
     "jest": "^27.0.4",
